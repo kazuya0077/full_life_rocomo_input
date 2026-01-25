@@ -1,60 +1,58 @@
-export type Gender = 'male' | 'female';
 
-export interface UserProfile {
-  name: string; // Added Name field
-  age: number;
-  gender: Gender;
-  height: number; // cm
+// ロコモ度の定義 (0, 1, 2, 3)
+export type LocomoDegree = 0 | 1 | 2 | 3;
+
+// 基本情報
+export interface BasicInfo {
+  companyName: string;
+  userName: string;
+  gender: 'male' | 'female';
+  heightCm: number;
 }
 
-// Stand-up test result representation
-// 0: Cannot do both legs 40cm
-// 1: Both legs 40cm
-// 2: Both legs 30cm
-// 3: Both legs 20cm
-// 4: Both legs 10cm
-// 5: One leg 40cm
-// 6: One leg 30cm
-// 7: One leg 20cm
-// 8: One leg 10cm
-export type StandUpResultScore = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+// 立ち上がりテストの結果値型
+export type StandUpResult = '10cm' | '20cm' | '30cm' | '40cm' | 'impossible' | 'untested';
 
-export interface TwoStepResult {
-  step1: number; // cm
-  step2: number; // cm
-  score: number; // (step1+step2)/height
+// 立ち上がりテスト
+export interface StandUpTest {
+  bothMin: StandUpResult;       // 両脚でできた最も低い台
+  singleRightMin: StandUpResult; // 片脚(右)でできた最も低い台
+  singleLeftMin: StandUpResult;  // 片脚(左)でできた最も低い台
 }
 
-export interface Locomo25Result {
-  answers: number[]; // Array of 0-4 values for 25 questions
-  totalScore: number;
+// 2ステップテスト
+export interface TwoStepTest {
+  step1Cm: number;
+  step2Cm: number;
 }
 
-export interface TestData {
-  profile: UserProfile | null;
-  standUpScore: StandUpResultScore | null;
-  twoStep: TwoStepResult | null;
-  locomo25: Locomo25Result | null;
+// ロコモ25 (nullは未回答を表す。値は0-4点)
+export type Locomo25Answers = (number | null)[];
+
+// 全体のフォームステート
+export interface LocomoState {
+  basicInfo: BasicInfo;
+  standUpTest: StandUpTest;
+  twoStepTest: TwoStepTest;
+  locomo25Answers: Locomo25Answers;
 }
 
-export type LocomoLevel = 0 | 1 | 2 | 3;
-
-export interface AdviceData {
-  level: LocomoLevel;
-  exercise: {
-    title: string;
-    items: {
-      name: string;
-      goal: string;
-      points: string[];
-      imageUrl: string; // Changed from imagePage to imageUrl
-    }[];
-  };
-  diet: {
-    title: string;
-    nutrients: string[];
-    description: string;
-    imageUrl: string; // Added imageUrl
-  };
-  summary: string;
+// 計算結果
+export interface CalculationResult {
+  standUpDegree: LocomoDegree;
+  standUpReason: string;
+  twoStepValue: number;
+  twoStepDegree: LocomoDegree;
+  locomo25Score: number;
+  locomo25Degree: LocomoDegree;
+  finalDegree: LocomoDegree;
 }
+
+export const YOUTUBE_URL = "https://youtu.be/lGlh4LhFWjs?si=ocktY6itxXn13rwh";
+
+export const DIETARY_POINTS = [
+  "たんぱく質（肉・魚・卵・大豆製品など）を意識する",
+  "カルシウム（牛乳・乳製品・小魚など）を意識する",
+  "ビタミンD（魚・きのこなど）を意識する",
+  "主食・主菜・副菜をそろえる"
+];
