@@ -6,6 +6,7 @@ export type LocomoDegree = 0 | 1 | 2 | 3;
 export interface BasicInfo {
   companyName: string;
   userName: string;
+  age: number;
   gender: 'male' | 'female';
   heightCm: number;
 }

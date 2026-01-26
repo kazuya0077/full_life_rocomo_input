@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { LocomoState, CalculationResult } from './types';
 import { calculateFinalResult } from './utils/calculations';
+import { sendToSpreadsheet, getCurrentDateTime, SpreadsheetData } from './utils/spreadsheet';
 import { InputSection } from './components/InputSection';
 import { ResultReport } from './components/ResultReport';
-import { Eye, Download, Loader2, ArrowRight, ArrowLeft, CheckCircle, FileText } from 'lucide-react';
+import { Eye, Download, Loader2, ArrowRight, ArrowLeft, CheckCircle, FileText, Send } from 'lucide-react';
 
 // html2pdfはindex.htmlのscriptタグで読み込まれるため、型定義を行う
 declare var html2pdf: any;
@@ -12,6 +13,7 @@ const initialState: LocomoState = {
   basicInfo: {
     companyName: '',
     userName: '',
+    age: 0,
     gender: 'male',
     heightCm: 0,
   },
@@ -41,6 +43,8 @@ const App: React.FC = () => {
 
   const [currentStep, setCurrentStep] = useState(1);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [isSendingData, setIsSendingData] = useState(false);
+  const [sendResult, setSendResult] = useState<{ success: boolean; message: string } | null>(null);
 
   // 計算処理
   useEffect(() => {
@@ -172,6 +176,48 @@ const App: React.FC = () => {
     }
   };
 
+  // スプレッドシートにデータを送信
+  const handleSendToSpreadsheet = async () => {
+    if (!result) {
+      alert('結果が計算されていません。');
+      return;
+    }
+
+    setIsSendingData(true);
+    setSendResult(null);
+
+    try {
+      const data: SpreadsheetData = {
+        date: getCurrentDateTime(),
+        name: state.basicInfo.userName,
+        age: state.basicInfo.age || '',
+        gender: state.basicInfo.gender === 'male' ? '男性' : '女性',
+        height: state.basicInfo.heightCm,
+        standUpScore: result.standUpDegree,
+        twoStepScore: result.twoStepValue,
+        locomo25Score: result.locomo25Score,
+        locomoLevel: result.finalDegree,
+      };
+
+      const response = await sendToSpreadsheet(data);
+
+      if (response.result === 'success') {
+        setSendResult({ success: true, message: 'スプレッドシートに保存しました！' });
+        alert('スプレッドシートに保存しました！');
+      } else {
+        setSendResult({ success: false, message: response.error || '送信に失敗しました' });
+        alert('送信に失敗しました: ' + (response.error || '不明なエラー'));
+      }
+    } catch (error) {
+      console.error('スプレッドシート送信エラー:', error);
+      setSendResult({ success: false, message: 'ネットワークエラーが発生しました' });
+      alert('ネットワークエラーが発生しました。');
+    } finally {
+      setIsSendingData(false);
+    }
+  };
+
+
   return (
     <div className="min-h-screen bg-gray-100 font-sans pb-20">
 
@@ -234,8 +280,8 @@ const App: React.FC = () => {
               onClick={handleBack}
               disabled={currentStep === 1}
               className={`flex items-center px-6 py-3 rounded-lg font-bold transition-colors ${currentStep === 1
-                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 shadow-sm'
+                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 shadow-sm'
                 }`}
             >
               <ArrowLeft className="w-5 h-5 mr-2" />
@@ -305,7 +351,7 @@ const App: React.FC = () => {
                 <button
                   onClick={handleDownloadPDF}
                   className="w-full sm:w-auto flex items-center justify-center px-8 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] transition-all"
-                  disabled={isGeneratingPdf}
+                  disabled={isGeneratingPdf || isSendingData}
                 >
                   {isGeneratingPdf ? (
                     <>
@@ -319,6 +365,30 @@ const App: React.FC = () => {
                     </>
                   )}
                 </button>
+
+                <button
+                  onClick={handleSendToSpreadsheet}
+                  className="w-full sm:w-auto flex items-center justify-center px-6 py-3 bg-green-600 text-white font-bold rounded-lg shadow-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] transition-all"
+                  disabled={isGeneratingPdf || isSendingData}
+                >
+                  {isSendingData ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      送信中...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5 mr-2" />
+                      スプシに保存
+                    </>
+                  )}
+                </button>
+
+                {sendResult && (
+                  <div className={`w-full text-center text-sm mt-2 ${sendResult.success ? 'text-green-600' : 'text-red-600'}`}>
+                    {sendResult.message}
+                  </div>
+                )}
               </div>
             </div>
 

@@ -204,6 +204,17 @@ export const InputSection: React.FC<InputSectionProps> = ({ step, state, onChang
                             </div>
                         </div>
                         <div>
+                            <label className={labelClassName}>年齢（任意）</label>
+                            <input
+                                type="number"
+                                className={inputClassName}
+                                placeholder="例: 65"
+                                value={state.basicInfo.age || ''}
+                                onChange={(e) => handleBasicInfoChange('age', parseInt(e.target.value) || 0)}
+                                onWheel={(e) => e.currentTarget.blur()}
+                            />
+                        </div>
+                        <div>
                             <label className={labelClassName}>身長 (cm) <span className="text-red-500">*</span></label>
                             <div className="relative">
                                 <Ruler className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
