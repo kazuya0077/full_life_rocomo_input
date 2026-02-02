@@ -1,18 +1,32 @@
 // スプレッドシート送信用のユーティリティ
 
 // GASウェブアプリのURL（デプロイ後に設定してください）
-const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx3dfRsPBk_9oyxFUXr4bnYxsce1iJKvBjVxUbf0uUr15tOroVVY1b4aPOvAZ_UZTov/exec';
+// TODO: 新しいスプレッドシート用のGAS URLに変更してください
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/YOUR_NEW_GAS_DEPLOYMENT_ID/exec';
 
 export interface SpreadsheetData {
     date: string;           // 日時
     name: string;           // 氏名
-    age: number | string;   // 年齢（現在のフォームにはないので空文字対応）
+    age: number | string;   // 年齢
     gender: string;         // 性別
     height: number;         // 身長
-    standUpScore: number;   // 立ち上がりスコア（ロコモ度）
-    twoStepScore: number;   // 2ステップスコア（値）
-    locomo25Score: number;  // ロコモ25点数
-    locomoLevel: number;    // 判定レベル（最終ロコモ度）
+
+    // 立ち上がりテスト詳細
+    standUpBoth: string;         // 両脚テスト結果（10cm/20cm/30cm/40cm/impossible/untested）
+    standUpSingleRight: string;  // 片脚右テスト結果
+    standUpSingleLeft: string;   // 片脚左テスト結果
+    standUpScore: number;        // 立ち上がりスコア（ロコモ度 0-3）
+
+    // 2ステップテスト詳細
+    twoStep1Cm: number;     // 1回目の値(cm)
+    twoStep2Cm: number;     // 2回目の値(cm)
+    twoStepScore: number;   // 2ステップスコア（計算後の値）
+
+    // ロコモ25詳細
+    locomo25Answers: (number | null)[];  // 各25問の回答（0-4点、未回答はnull）
+    locomo25Score: number;               // ロコモ25合計点数
+
+    locomoLevel: number;    // 判定レベル（最終ロコモ度 0-3）
 }
 
 /**

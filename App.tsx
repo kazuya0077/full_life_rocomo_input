@@ -193,9 +193,22 @@ const App: React.FC = () => {
         age: state.basicInfo.age || '',
         gender: state.basicInfo.gender === 'male' ? '男性' : '女性',
         height: state.basicInfo.heightCm,
+
+        // 立ち上がりテスト詳細
+        standUpBoth: state.standUpTest.bothMin,
+        standUpSingleRight: state.standUpTest.singleRightMin,
+        standUpSingleLeft: state.standUpTest.singleLeftMin,
         standUpScore: result.standUpDegree,
+
+        // 2ステップテスト詳細
+        twoStep1Cm: state.twoStepTest.step1Cm,
+        twoStep2Cm: state.twoStepTest.step2Cm,
         twoStepScore: result.twoStepValue,
+
+        // ロコモ25詳細
+        locomo25Answers: state.locomo25Answers,
         locomo25Score: result.locomo25Score,
+
         locomoLevel: result.finalDegree,
       };
 
