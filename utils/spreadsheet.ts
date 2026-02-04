@@ -1,8 +1,7 @@
 // スプレッドシート送信用のユーティリティ
 
-// GASウェブアプリのURL（デプロイ後に設定してください）
-// TODO: 新しいスプレッドシート用のGAS URLに変更してください
-const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/YOUR_NEW_GAS_DEPLOYMENT_ID/exec';
+// GASウェブアプリのURL - full_life_rocomo_input用
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwUJPZV7_YKl7RsHWEAUdDEdn9g19D6qgTnM_da8eRlOVQcigg_Xz48ivRbOS9aZAwoJQ/exec';
 
 export interface SpreadsheetData {
     date: string;           // 日時
