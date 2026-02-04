@@ -71,13 +71,26 @@ function doPost(e) {
     })).setMimeType(ContentService.MimeType.JSON);
   }
   
-  // 3. ロコモ25の回答を展開
+  // 3. ロコモ25のラベルマッピング
+  var locomo25Labels = {
+    0: '困難でない',
+    1: '少し困難',
+    2: 'かなり困難',
+    3: '極めて困難',
+    4: 'できない'
+  };
+  
+  // 4. ロコモ25の回答を展開（数字とラベルの形式で）
   var locomo25Answers = params.locomo25Answers || [];
-  // 25問分の配列を確保（未回答はnullまたは空）
   var q1to25 = [];
   for (var i = 0; i < 25; i++) {
     var answer = locomo25Answers[i];
-    q1to25.push(answer !== null && answer !== undefined ? answer : '');
+    if (answer !== null && answer !== undefined) {
+      var label = locomo25Labels[answer] || '';
+      q1to25.push(answer + '(' + label + ')');
+    } else {
+      q1to25.push('');
+    }
   }
   
   // 4. 立ち上がりテスト結果の日本語変換
