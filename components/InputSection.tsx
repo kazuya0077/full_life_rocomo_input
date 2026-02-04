@@ -16,7 +16,7 @@ interface InputSectionProps {
 
 // 立ち上がりテスト用選択肢（「Min = 成功した最も低い台」を明示）
 const BOTH_LEG_OPTIONS: { value: StandUpResult; label: string; sub: string }[] = [
-    { value: '10cm', label: '10cm', sub: '20cmも余裕で可能' },
+    { value: '10cm', label: '10cm', sub: '10cmも余裕で可能' },
     { value: '20cm', label: '20cm', sub: '10cmは立てない' },
     { value: '30cm', label: '30cm', sub: '20cmは立てない' },
     { value: '40cm', label: '40cm', sub: '30cmは立てない' },
