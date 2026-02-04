@@ -1,7 +1,7 @@
 // スプレッドシート送信用のユーティリティ
 
-// GASウェブアプリのURL - full_life_rocomo_input用
-const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwUJPZV7_YKl7RsHWEAUdDEdn9g19D6qgTnM_da8eRlOVQcigg_Xz48ivRbOS9aZAwoJQ/exec';
+// GASウェブアプリのURL - full_life_rocomo_input用（ロコモ25ラベル付き対応版）
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwPG6kwJAj-qRN-gPmUYYKMyIvn4ey-PKkej6TDNehQ4Gyi6-U9c3uMu0L7V2RWJKX1kQ/exec';
 
 export interface SpreadsheetData {
     date: string;           // 日時
